@@ -6,7 +6,7 @@ UPDATE [table] SET [column] = 'my new value';
 Above is not possible within Cassandra. This tool enables you to do this anyway. Please take a look at the usage below to find out how to use this tool.
 
 # Usage
-Usage: cassandrabulkupdater.exe /CassandraHostName="<CassandraHostName>" /CassandraUserName="<CassandraUserName>" /CassandraPassword="<CassandraPassword>" /Keyspace="<Keyspace>" /Table="<Table>" /ColumnToUpdateName="<ColumnToUpdateName>" /ColumnToUpdateType="<ColumnToUpdateType>" /ColumnToUpdateValue="<ColumnToUpdateValue>" /PrimaryKeyColumnName="<PrimaryKeyColumnName>" /PrimaryKeyColumnType="<PrimaryKeyColumnType>" /NumberOfThreads=<NumberOfThreads>
+Usage: cassandrabulkupdater.exe /CassandraHostName="[CassandraHostName]" /CassandraUserName="[CassandraUserName]" /CassandraPassword="[CassandraPassword]" /Keyspace="[Keyspace]" /Table="[Table]" /ColumnToUpdateName="[ColumnToUpdateName]" /ColumnToUpdateType="[ColumnToUpdateType]" /ColumnToUpdateValue="[ColumnToUpdateValue]" /PrimaryKeyColumnName="[PrimaryKeyColumnName]" /PrimaryKeyColumnType="[PrimaryKeyColumnType]" /NumberOfThreads=[NumberOfThreads]
 
 CassandraHostName: The address where to reach cassandra (just provide one of the reachable nodes)
 CassandraUserName: The cassandra username to use (OPTIONAL)
