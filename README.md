@@ -6,6 +6,7 @@ UPDATE [table] SET [column] = 'my new value';
 Above is not possible within Cassandra. This tool enables you to do this anyway. Please take a look at the usage below to find out how to use this tool.
 
 # Usage
+```
 Usage: cassandrabulkupdater.exe /CassandraHostName="[CassandraHostName]" /CassandraUserName="[CassandraUserName]" /CassandraPassword="[CassandraPassword]" /Keyspace="[Keyspace]" /Table="[Table]" /ColumnToUpdateName="[ColumnToUpdateName]" /ColumnToUpdateType="[ColumnToUpdateType]" /ColumnToUpdateValue="[ColumnToUpdateValue]" /PrimaryKeyColumnName="[PrimaryKeyColumnName]" /PrimaryKeyColumnType="[PrimaryKeyColumnType]" /NumberOfThreads=[NumberOfThreads]
 
 CassandraHostName: The address where to reach cassandra (just provide one of the reachable nodes)
@@ -19,3 +20,6 @@ ColumnToUpdateValue: The value to insert in the COLUMNTOUPDATE field
 PrimaryKeyColumnName: The column name of the primarykey
 PrimaryKeyColumnType: The column type of the primarykey  (Supported: System.String, System.Int16, System.Int32, System.Int64)
 NumberOfThreads: The number of threads to use which the bulkupdater uses against Cassandra. Advise is to use 20 here.
+```
+
+Please be cautious as always. This tool hasn't been heavily tested.
