@@ -5,6 +5,8 @@ UPDATE [table] SET [column] = 'my new value';
 ```
 Above is not possible within Cassandra. This tool enables you to do this anyway. Please take a look at the usage below to find out how to use this tool.
 
+The tool is written in .NET Core 2.2 with the .NET Generic Host system.
+
 # Usage
 ```
 Usage: cassandrabulkupdater.exe /CassandraHostName="[CassandraHostName]" /CassandraUserName="[CassandraUserName]" /CassandraPassword="[CassandraPassword]" /Keyspace="[Keyspace]" /Table="[Table]" /ColumnToUpdateName="[ColumnToUpdateName]" /ColumnToUpdateType="[ColumnToUpdateType]" /ColumnToUpdateValue="[ColumnToUpdateValue]" /PrimaryKeyColumnName="[PrimaryKeyColumnName]" /PrimaryKeyColumnType="[PrimaryKeyColumnType]" /NumberOfThreads=[NumberOfThreads]
