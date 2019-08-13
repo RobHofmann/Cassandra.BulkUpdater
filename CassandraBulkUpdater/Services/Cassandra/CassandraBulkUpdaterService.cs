@@ -20,9 +20,9 @@ namespace CassandraBulkUpdater.Services.Cassandra
             _counter = counter;
         }
 
-        public async Task UpdateRowsAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, int numberOfSimultaneousThreads, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, long totalCount, CancellationToken cancellationToken)
+        public async Task UpdateRowsAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, int numberOfSimultaneousThreads, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, CancellationToken cancellationToken)
         {
-            await ConcurrentUtils.ConcurrentUtils.Times(times: numberOfSimultaneousThreads, limit: numberOfSimultaneousThreads, index => UpdateRowAsync(session, preparedStatement, rowSet, columnToUpdateType, columnToUpdateValue, primaryKeyColumnName, primaryKeyColumnType, totalCount, cancellationToken));
+            await ConcurrentUtils.ConcurrentUtils.Times(times: numberOfSimultaneousThreads, limit: numberOfSimultaneousThreads, index => UpdateRowAsync(session, preparedStatement, rowSet, columnToUpdateType, columnToUpdateValue, primaryKeyColumnName, primaryKeyColumnType, cancellationToken));
         }
 
         public PreparedStatement CreatePreparedStatement(ISession session, string keyspace, string table, string columnToUpdateName, string primaryKeyColumnName)
@@ -62,7 +62,7 @@ namespace CassandraBulkUpdater.Services.Cassandra
             return rsCount.Select(x => x.GetValue<long>("count")).FirstOrDefault();
         }
 
-        public async Task UpdateRowAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, long totalCount, CancellationToken cancellationToken)
+        public async Task UpdateRowAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, CancellationToken cancellationToken)
         {
             // Get queue in preparation of multithreaded updating
             ConcurrentQueue<string> primaryKeyValues = CreateQueueFromRowSet(rowSet, primaryKeyColumnName);
@@ -71,13 +71,11 @@ namespace CassandraBulkUpdater.Services.Cassandra
             {
                 if (cancellationToken.IsCancellationRequested) return;
                 _counter.IncrementCounter();
-                _logger.Log($"Updating row with {primaryKeyColumnName} {primaryKeyColumnValue}", $"{_counter.ReadCounter()}/{totalCount}");
-
                 dynamic castedColumnToUpdateValue = Convert.ChangeType(columnToUpdateValue, Type.GetType(columnToUpdateType));
                 dynamic castedPrimaryKeyColumnValue = Convert.ChangeType(primaryKeyColumnValue, Type.GetType(primaryKeyColumnType));
                 var boundStatement = preparedStatement.Bind(castedColumnToUpdateValue, castedPrimaryKeyColumnValue);
                 await session.ExecuteAsync(boundStatement);
-                _logger.Log($"Updated row with {primaryKeyColumnName} {primaryKeyColumnValue}", $"{_counter.ReadCounter()}/{totalCount}");
+                _logger.Log($"Updated row with {primaryKeyColumnName} {primaryKeyColumnValue}", $"{_counter.ReadCounter()}");
             }
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using CassandraBulkUpdater.Base.Contracts.Helpers;
 using CassandraBulkUpdater.Base.Contracts.Services;
 using System;
@@ -68,14 +67,7 @@ namespace CassandraBulkUpdater.Services.HostedServices
                 _logger.Log("Connected to Cassandra cluster...");
 
                 if (_cts.IsCancellationRequested) return;
-
-                // Fetching Rowcount
-                _logger.Log("Fetching rowcount");
-                long totalCount = await _cassandraBulkUpdaterService.GetRowCountAsync(session, table, primaryKeyColumnName);
-                _logger.Log($"Found {totalCount} rows");
-
-                if (_cts.IsCancellationRequested) return;
-
+                
                 // Fetching Rows
                 _logger.Log("Fetching rows");
                 var rowSet = await _cassandraBulkUpdaterService.GetRowsAsync(session, table, primaryKeyColumnName);
@@ -85,7 +77,7 @@ namespace CassandraBulkUpdater.Services.HostedServices
 
                 // Create prepared statement (this gives a faster result) & Start updating the rows
                 var preparedStatement = _cassandraBulkUpdaterService.CreatePreparedStatement(session, keyspace, table, columnToUpdateName, primaryKeyColumnName);
-                await _cassandraBulkUpdaterService.UpdateRowsAsync(session, preparedStatement, rowSet, numberOfSimultaneousThreads, columnToUpdateType, columnToUpdateValue, primaryKeyColumnName, primaryKeyColumnType, totalCount, _cts.Token);
+                await _cassandraBulkUpdaterService.UpdateRowsAsync(session, preparedStatement, rowSet, numberOfSimultaneousThreads, columnToUpdateType, columnToUpdateValue, primaryKeyColumnName, primaryKeyColumnType, _cts.Token);
 
                 if (_cts.IsCancellationRequested) return;
 
@@ -93,17 +85,15 @@ namespace CassandraBulkUpdater.Services.HostedServices
             }
             catch (Exception ex)
             {
+                _logger.Log(ex.ToString());
+
                 if (ex is ArgumentOutOfRangeException || ex is ArgumentNullException)
                 {
-                    _logger.Log(ex.Message);
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
                     _logger.Log(_commandlineArgsHelper.GetCommandlineUsageText());
-                    return;
                 }
-
-                throw;
             }
         }
 

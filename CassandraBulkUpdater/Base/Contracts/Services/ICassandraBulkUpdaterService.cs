@@ -7,7 +7,7 @@ namespace CassandraBulkUpdater.Base.Contracts.Services
 {
     internal interface ICassandraBulkUpdaterService
     {
-        Task UpdateRowsAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, int numberOfSimultaneousThreads, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, long totalCount, CancellationToken cancellationToken);
+        Task UpdateRowsAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, int numberOfSimultaneousThreads, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, CancellationToken cancellationToken);
 
         PreparedStatement CreatePreparedStatement(ISession session, string keyspace, string table, string columnToUpdateName, string primaryKeyColumnName);
 
@@ -19,6 +19,6 @@ namespace CassandraBulkUpdater.Base.Contracts.Services
 
         Task<long> GetRowCountAsync(ISession session, string table, string primaryKeyColumnName);
 
-        Task UpdateRowAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, long totalCount, CancellationToken cancellationToken);
+        Task UpdateRowAsync(ISession session, PreparedStatement preparedStatement, RowSet rowSet, string columnToUpdateType, string columnToUpdateValue, string primaryKeyColumnName, string primaryKeyColumnType, CancellationToken cancellationToken);
     }
 }
